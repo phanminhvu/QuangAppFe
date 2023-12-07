@@ -1,0 +1,1 @@
+export const public_api = 'https://scanapp.vn:3001';

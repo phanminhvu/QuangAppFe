@@ -36,3 +36,37 @@ code {
 .header .active {
   color: #2c7613;
 }
+
+/*.site-layout {*/
+/*  background: #fff; !* Background color for the layout *!*/
+/*}*/
+
+.site-layout-background {
+  background: #001529; /* Background color for the header */
+  padding: 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 64px; /* Adjust height as needed */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+.user-info span {
+  margin-right: 16px; /* Adjust spacing between elements */
+  color: white; /* Text color */
+}
+
+/* Styling for the logout button */
+.user-info button {
+  color: white;
+}
+.user-info button:hover {
+  color: #1890ff; /* Change color on hover */
+}

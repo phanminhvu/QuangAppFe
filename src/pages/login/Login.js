@@ -4,7 +4,10 @@ import axios from 'axios';
 import { setUserSession } from '../../utils/common';
 import { useNavigate } from 'react-router-dom';
 import "./Login.css";
+import {public_api} from "../../env";
+
 const { Option } = Select;
+
 function LogIn() {
   const initialValues = {
     email: '',
@@ -17,17 +20,21 @@ function LogIn() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [appList, setAppList] = useState([]);
-  useEffect(() => {   getAppName();}, []);
 
   const handleSubmit = async (values) => {
-    console.log(values);
     setIsSubmit(true);
     try {
-      const response = await axios.post('http://localhost:3000/app1/users/login', values);
-      console.log(response.data);
+      const response = await axios.post(`${public_api}/users/login`, values);
       if(response.data.success === true){
         setUserSession(response.data.data.token, response.data.data.user);
-        window.location.replace("/");
+        if(response.data.data.user.role === "Admin") {
+          window.location.replace("/dashboard");
+        }else {
+          window.location.replace("/app1");
+
+        }
+
+
 
       } else{
         alert(response.data.message);
@@ -43,12 +50,7 @@ function LogIn() {
     }
   };
 
-  const getAppName = async () => {
-    const response = await axios.get('http://localhost:3000/app/app_name');
-    const data = response.data;
-    setAppList(data.data);
-    return data;
-  }
+
 
   const validate = (values) => {
     const errors = {};

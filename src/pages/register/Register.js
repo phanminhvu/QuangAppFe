@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 import {setUserSession} from "../../utils/common";
 import {useNavigate} from "react-router-dom";
+import {public_api} from "../../env";
+
 const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
 
@@ -47,28 +49,20 @@ function Register() {
 
   const onFinish = async (values) => {
     setFormErrors(await validate(values));
-    setIsSubmit(true);
+    // setIsSubmit(true);
     console.log('Received values:', values);
 
-    axios.post('http://localhost:3000/users', values).then(response => {
-      history('/login');
+
+    axios.post(`${public_api}/users/signup`, values).then(response => {
+      console.log(response.data);
+      history('/Login');
     }).catch(error => {
+      // history('/Login');
       console.log(error)
     });
   };
 
 
-  useEffect(() => {
-    getAppName();
-  }, []);
-
-
-  const getAppName = async () => {
-    const response = await axios.get('http://localhost:3000/app/app_name');
-    const data = response.data;
-    setAppList(data.data);
-    return data;
-  }
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit && form.isFieldsTouched(true)) {
@@ -89,7 +83,7 @@ function Register() {
           <Form
               form={form}
               name="registerForm"
-              onFinish={onFinish}
+              onFinish={(values) => onFinish(values)}
               initialValues={initialValues}
           >
             <h1>Sign Up</h1>
@@ -102,33 +96,8 @@ function Register() {
               >
                 <Input placeholder="Choose a name" />
               </Form.Item>
-              <Form.Item
-                  name="role"
-                  label="Role"
-                  rules={[{ required: true, message: 'Please select a role!' }]}
-              >
-                <Select    onChange={(value) => {setRoles(value)}}>
-                  <Option value="Admin">Admin</Option>
-                  <Option value="User">User</Option>
-                </Select>
-              </Form.Item>
 
-              {
-                roles === 'User' &&
-                  <Form.Item
-                      name="register_apps_id"
-                      label="Register APP"
-                      rules={[{ required: true, message: 'Please select App!' }]}
-                  >
-                    <CheckboxGroup>
-                      {
-                        appList?.map((app) =>
 
-                            <Checkbox value={app._id}>{app.appName}</Checkbox>)
-                      }
-                    </CheckboxGroup>
-                  </Form.Item>
-              }
 
               <Form.Item
                   name="email"
