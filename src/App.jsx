@@ -6,7 +6,7 @@ import {
     UserOutlined,
     DashboardOutlined,
     HomeOutlined,
-AndroidOutlined ,
+    AndroidOutlined ,
     SettingOutlined
 } from '@ant-design/icons';
 import {public_api} from './env';
@@ -27,7 +27,6 @@ import ChangePassword from "./pages/Setting/ChangePassword";
 const {SubMenu} = Menu;
 const { Header, Content, Sider } = Layout;
 function App() {
-    console.log(process.env.PUBLIC_API)
     const [authLoading, setAuthLoading] = useState(true);
     const [user, setUser] = useState(getUser());
     const [token, setToken] = useState(getToken());
@@ -42,11 +41,14 @@ function App() {
             if (!response.data.success) {
                 removeUserSession();
             }
-        }).catch(error => {
+        }).catch( error => {
             removeUserSession();
             setAuthLoading(false);
         });
     }, []);
+
+
+
 
 
 
@@ -147,83 +149,82 @@ function App() {
         // </BrowserRouter>
 
 
-    <BrowserRouter>
-        <Layout style={{ minHeight: '100vh' }}>
-            {/* Sidebar */}
-            {token && (
-                <Sider theme="dark">
-                    <h2 style={{ color: 'white', paddingLeft:"37px" }}>{user.role}</h2>
-                    <Menu mode="inline" theme="dark"  >
-
-                        {user.role === 'Admin' &&      <Menu.Item icon={<HomeOutlined />} key="dashboardMain">
-                            <NavLink to="/dashboard"> Dashboard</NavLink>
-                        </Menu.Item>}
-
-                        {user.role === 'User' &&
-                            <Menu.Item icon={<AndroidOutlined />} key="appDetails">
-                                <NavLink to="/app1"> App1</NavLink>
-                            </Menu.Item>}
-
-                        {user.role === 'User' &&
-                            <Menu.Item icon={<AndroidOutlined />} key="app2">
-                                <NavLink to="/app2"> App 2</NavLink>
-                            </Menu.Item>}
-                        {user.role === 'User' &&<Menu.Item icon={<AndroidOutlined />} key="app3">
-                            <NavLink to="/app2"> App 3</NavLink>
-                        </Menu.Item>}
-                        <Menu.SubMenu icon={<SettingOutlined />} title="Setting">
-                            <Menu.Item  key="profile" >
-                                <NavLink to="/setting/profile">Profile</NavLink>
-                            </Menu.Item>
-                            <Menu.Item key="change-password" >
-                                <NavLink to="/setting/change-password">Change Password</NavLink>
-                            </Menu.Item>
-                        </Menu.SubMenu>
-                    </Menu>
-                </Sider>
-            )}
-
-            <Layout className="site-layout">
-                {/* Header */}
+        <BrowserRouter>
+            <Layout style={{ minHeight: '100vh' }}>
+                {/* Sidebar */}
                 {token && (
-                    <Header className="site-layout-background" style={{ padding: 0 }}>
-                        <div className="header-content">
-                            <h2 style={{ color: 'white' }}>
-                                {/*Your App Name*/}
+                    <Sider theme="dark">
+                        <h2 style={{ color: 'white', paddingLeft:"37px" }}>{user.role}</h2>
+                        <Menu mode="inline" theme="dark"  >
 
-                            </h2>
-                            <div className="user-info">
-                                <span style={{ color: 'white' }}>Welcome {user.name}!</span>
-                                <Button type="link" onClick={handleLogout} style={{ color: 'white' }}>
-                                    Logout
-                                </Button>
-                            </div>
-                        </div>
-                    </Header>
+                            {user.role === 'Admin' && <Menu.Item icon={<HomeOutlined />} key="dashboardMain">
+                                <NavLink to="/dashboard"> Dashboard</NavLink>
+                            </Menu.Item>}
+
+                            {user.role === 'User' &&
+                                <Menu.Item icon={<AndroidOutlined />} key="appDetails">
+                                    <NavLink to="/app1"> App1</NavLink>
+                                </Menu.Item>}
+
+                            {user.role === 'User' &&
+                                <Menu.Item icon={<AndroidOutlined />} key="app2">
+                                    <NavLink to="/app2"> App 2</NavLink>
+                                </Menu.Item>}
+                            {user.role === 'User' &&<Menu.Item icon={<AndroidOutlined />} key="app3">
+                                <NavLink to="/app2"> App 3</NavLink>
+                            </Menu.Item>}
+                            <Menu.SubMenu icon={<SettingOutlined />} title="Setting">
+                                <Menu.Item  key="profile" >
+                                    <NavLink to="/setting/profile">Profile</NavLink>
+                                </Menu.Item>
+                                <Menu.Item key="change-password" >
+                                    <NavLink to="/setting/change-password">Change Password</NavLink>
+                                </Menu.Item>
+                            </Menu.SubMenu>
+                        </Menu>
+                    </Sider>
                 )}
 
-                {/* Content */}
-                <Content style={{ margin: '16px' }}>
-                    <Routes >
-                        <Route path="*" element={<Login />} />
+                <Layout className="site-layout">
+                    {/* Header */}
+                    {token && (
+                        <Header className="site-layout-background" style={{ padding: 0 }}>
+                            <div className="header-content">
+                                <h2 style={{ color: 'white' }}>
+                                    {/*Your App Name*/}
 
-                        <Route element={<PublicRoutes />}>
-                            <Route path="/" element={<Login />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                        </Route>
-                        <Route element={<PrivateRoutes />}>
-                            <Route index path="/dashboard" element={<Dashboard />} />
-                            <Route path="/setting/profile" element={<Profile />} />
-                            <Route path="/setting/change-password" element={<ChangePassword />} />
-                            <Route path="/app1" element={<App1 />} />
-                            <Route path="/app2" element={<App2 />} />
-                        </Route>
-                    </Routes>
-                </Content>
+                                </h2>
+                                <div className="user-info">
+                                    <span style={{ color: 'white' }}>Welcome {user.name}!</span>
+                                    <Button type="link" onClick={handleLogout} style={{ color: 'white' }}>
+                                        Logout
+                                    </Button>
+                                </div>
+                            </div>
+                        </Header>
+                    )}
+
+                    {/* Content */}
+                    <Content style={{ margin: '16px' }}>
+                        <Routes >
+                            <Route path="*" element={<Login />} />
+                            <Route element={<PublicRoutes />}>
+                                <Route path="/" element={<Login />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/register" element={<Register />} />
+                            </Route>
+                            <Route element={<PrivateRoutes />}>
+                                <Route index path="/dashboard" element={<Dashboard />} />
+                                <Route path="/setting/profile" element={<Profile />} />
+                                <Route path="/setting/change-password" element={<ChangePassword />} />
+                                <Route path="/app1" element={<App1 />} />
+                                <Route path="/app2" element={<App2 />} />
+                            </Route>
+                        </Routes>
+                    </Content>
+                </Layout>
             </Layout>
-        </Layout>
-    </BrowserRouter>
+        </BrowserRouter>
     );
 }
 

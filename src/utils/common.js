@@ -14,10 +14,12 @@ export const getToken = () => {
 export const removeUserSession = () => {
   sessionStorage.removeItem('token');
   sessionStorage.removeItem('user');
+  window.dispatchEvent(new Event('storage'))
 }
 
 // set the token and user from the session storage
 export const setUserSession = (token, user) => {
   sessionStorage.setItem('token', token);
   sessionStorage.setItem('user', JSON.stringify(user));
+  window.dispatchEvent(new Event('storage'))
 }

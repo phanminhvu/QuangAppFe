@@ -1,12 +1,11 @@
-import {Form, Input, Button, Select, Checkbox} from 'antd';
-import {useEffect, useState} from 'react';
+import {Form, Input, Button} from 'antd';
+import { useState} from 'react';
 import axios from 'axios';
 import { setUserSession } from '../../utils/common';
 import { useNavigate } from 'react-router-dom';
 import "./Login.css";
 import {public_api} from "../../env";
 
-const { Option } = Select;
 
 function LogIn() {
   const initialValues = {
@@ -28,9 +27,11 @@ function LogIn() {
       if(response.data.success === true){
         setUserSession(response.data.data.token, response.data.data.user);
         if(response.data.data.user.role === "Admin") {
-          window.location.replace("/dashboard");
+          // window.location.replace("/dashboard");
+          history("/dashboard");
         }else {
-          window.location.replace("/app1");
+          history("/app1");
+          // window.location.replace("/app1");
 
         }
 
