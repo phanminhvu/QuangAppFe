@@ -1,39 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import  {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {getToken, getUser, removeUserSession} from '../../utils/common';
-import {Space,Switch , Card, Table, Button, Tag, message} from 'antd';
+import {Switch , Card, Table,  message} from 'antd';
 import {public_api} from "../../env";
 
 // import UserModal from "./UserModal";
 // import EmailModal from "./EmailModal";
 const Dashboard = props => {
-  const history = useNavigate();
-  const user = getUser();
+
   const [messageApi,contextHolder] = message.useMessage();
   const [dataTable, setDataTable] = useState([])
-  const [modalData, setModalData] = useState({})
-  const [modalEmailData, setModalEmailData] = useState({})
-  const [visible, setVisible] = useState(false)
-  const [visibleEmail, setVisibleEmail] = useState(false)
+
   const token = getToken();
-  const success = (text) => {
-    messageApi.open({
-      type: 'success',
-      content: text,
-    });
-  };
-  const error = (text) => {
-    messageApi.open({
-      type: 'error',
-      content: text,
-    });
-  };
+
   const columns = [
     {
       title: 'User Name',
       dataIndex: 'user_id',
       key: 'user_id',
+      width: '15%',
       render: (user_id) => <a>{user_id.name}</a>,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'user_id',
+      key: 'email',
+      width: '20%',
+
+      render: (user_id) => <a>{user_id.email}</a>,
     },
     {
       title: 'app1',

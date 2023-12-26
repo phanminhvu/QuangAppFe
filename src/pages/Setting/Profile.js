@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {getToken, getUser, setUserSession} from '../../utils/common';
+import {getToken, getUser, } from '../../utils/common';
 import {useNavigate} from 'react-router-dom';
-import {Form, Input, Switch, Card, message, Select, Button} from 'antd';
-import {CheckOutlined, CloseOutlined} from '@ant-design/icons';
+import {Form, Input,  Card, message,  Button} from 'antd';
 import {public_api} from "../../env";
 
-const {Option} = Select;
 const Profile = () => {
     const [messageApi,contextHolder] = message.useMessage();
     const history = useNavigate();
@@ -77,7 +75,6 @@ const Profile = () => {
                 body: JSON.stringify(requestData),
             });
             const body = await response.json();
-         console.log(token, body)
             success('Update user successfully!')
             // Handle form submission here, update user data with the form values
             setData(body);

@@ -1,19 +1,21 @@
-import { Form, Input, Button, Select, Checkbox } from 'antd';
+import {Form, Input, Button, Spin , message} from 'antd';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import {setUserSession} from "../../utils/common";
 import {useNavigate} from "react-router-dom";
 import {public_api} from "../../env";
 
-const { Option } = Select;
-const CheckboxGroup = Checkbox.Group;
 
 function Register() {
   const [form] = Form.useForm();
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [roles, setRoles] = useState('User');
-  const [appList, setAppList] = useState([]);
+  const [messageApi,contextHolder] = message.useMessage();
+  const error = (text) => {
+    messageApi.open({
+      type: 'error',
+      content: text,
+    });
+  };
   const history = useNavigate();
   const initialValues = {
     name: '',
@@ -48,18 +50,18 @@ function Register() {
   };
 
   const onFinish = async (values) => {
+    setIsSubmit(true);
+
     setFormErrors(await validate(values));
-    // setIsSubmit(true);
-    console.log('Received values:', values);
 
 
     axios.post(`${public_api}/users/signup`, values).then(response => {
-      console.log(response.data);
       history('/Login');
-    }).catch(error => {
-      // history('/Login');
-      console.log(error)
+    }).catch(e => {
+
+      error(e.response.data.message);
     });
+    setIsSubmit(false)
   };
 
 
@@ -68,10 +70,11 @@ function Register() {
     if (Object.keys(formErrors).length === 0 && isSubmit && form.isFieldsTouched(true)) {
       form.submit();
     }
-  }, [formErrors, isSubmit, form]);
+  }, [formErrors,  form]);
 
   return (
       <>
+        {contextHolder}
         <div className="bgImg"></div>
         <div className="container">
           {Object.keys(formErrors).length === 0 && isSubmit ? (
@@ -83,7 +86,12 @@ function Register() {
           <Form
               form={form}
               name="registerForm"
-              onFinish={(values) => onFinish(values)}
+              onFinish={(values) =>
+              {
+                onFinish(values)
+
+              }
+          }
               initialValues={initialValues}
           >
             <h1>Sign Up</h1>
@@ -144,8 +152,8 @@ function Register() {
                 <Input.Password placeholder="Confirm password" />
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  Submit
+                <Button type="primary" disabled={isSubmit} htmlType="submit">
+                  {isSubmit ? <Spin/> : 'Submit'}
                 </Button>
               </Form.Item>
             </div>

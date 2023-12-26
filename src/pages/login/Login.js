@@ -1,4 +1,4 @@
-import {Form, Input, Button} from 'antd';
+import {Form, Input,message, Button} from 'antd';
 import { useState} from 'react';
 import axios from 'axios';
 import { setUserSession } from '../../utils/common';
@@ -8,17 +8,24 @@ import {public_api} from "../../env";
 
 
 function LogIn() {
+  const [messageApi,contextHolder] = message.useMessage();
+
   const initialValues = {
     email: '',
     password: '',
     app_id: '',
   };
 
+
+  const error = (text) => {
+    messageApi.open({
+      type: 'error',
+      content: text,
+    });
+  };
+
   const [form] = Form.useForm();
-  const history = useNavigate();
-  const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [appList, setAppList] = useState([]);
 
   const handleSubmit = async (values) => {
     setIsSubmit(true);
@@ -27,18 +34,15 @@ function LogIn() {
       if(response.data.success === true){
         setUserSession(response.data.data.token, response.data.data.user);
         if(response.data.data.user.role === "Admin") {
-          // window.location.replace("/dashboard");
-          history("/dashboard");
+          window.location.replace("/dashboard");
+          // history("/dashboard");
         }else {
-          history("/app1");
-          // window.location.replace("/app1");
+          // history("/app1");
+          window.location.replace("/app1");
 
         }
-
-
-
       } else{
-        alert(response.data.message);
+        error(response.data.message);
       }
 
       // setUserSession(response.data.token, response.data.user);
@@ -46,8 +50,8 @@ function LogIn() {
       //
       // // history('/dashboard');
       // window.location.reload()
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      error(e.response.data.message);
     }
   };
 
@@ -74,6 +78,7 @@ function LogIn() {
 
   return (
       <>
+        {contextHolder}
         <div className="bgImg"></div>
         <div className="container">
 

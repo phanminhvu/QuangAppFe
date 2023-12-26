@@ -37,7 +37,6 @@ const App1 = props => {
     // handle click event of logout button
     useEffect(() => {
         getAppDetails().then(response => {
-            console.log(response, 'alo')
             const col = Object.entries(response[0]).map(([key, value]) => {
                 return {
                     title: key,
@@ -63,11 +62,8 @@ const App1 = props => {
 
 
     const uploadFileConfig = async () => {
-
-        console.log(data, 'alo')
-
       try {
-        const response = await fetch(`${public_api}/post-config`, {
+        const response = await fetch(`${public_api}/app1/post-config`, {
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + token,
@@ -80,7 +76,6 @@ const App1 = props => {
         success('Update config successfully!')
         // Handle form submission here, update user data with the form values
           getAppDetails().then(response => {
-              console.log(response, 'alo')
               const col = Object.entries(response[0]).map(([key, value]) => {
                   return {
                       title: key,

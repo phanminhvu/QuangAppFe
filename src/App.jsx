@@ -23,14 +23,34 @@ import App1 from './pages/App1';
 import NotFound from './pages/NotFound';
 import App2 from "./pages/App2";
 import ChangePassword from "./pages/Setting/ChangePassword";
+import ErrorPage from "./pages/ErrMobile.js";
 
 const {SubMenu} = Menu;
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 function App() {
     const [authLoading, setAuthLoading] = useState(true);
     const [user, setUser] = useState(getUser());
     const [token, setToken] = useState(getToken());
     const [showMenu, setShowMenu] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+
+
+
     useEffect(() => {
         if (!token || !user) {
             return;
@@ -45,9 +65,9 @@ function App() {
             removeUserSession();
             setAuthLoading(false);
         });
+
+
     }, []);
-
-
 
 
 
@@ -66,94 +86,17 @@ function App() {
 
     }
 
+
+
     return (
-        // <BrowserRouter>
-        //     <div style={{ display: 'flex', height: '100vh' }}>
-        //         {/* Header */}
-        //         {token && (
-        //             <PageHeader
-        //                 className="site-page-header"
-        //                 title="Your App Name"
-        //                 extra={[
-        //                     <div key="logout" className="logout-container">
-        //                         <span>Welcome {user.name}!</span>
-        //                         <Button key="logoutButton" type="primary" onClick={handleLogout}>
-        //                             Logout
-        //                         </Button>
-        //                     </div>,
-        //                 ]}
-        //             />
-        //         )}
-        //         {/* Menu */}
-        //         {token && (
-        //             <div style={{ width: 250, backgroundColor: '#f0f0f0', padding: '20px' }}>
-        //                 <Menu mode="inline" theme="light">
-        //
-        //                     {user.role === 'Admin' &&      <Menu.Item icon={<HomeOutlined />} key="dashboardMain">
-        //                         <NavLink to="/dashboard"> Dashboard</NavLink>
-        //                     </Menu.Item>}
-        //
-        //                     {user.role === 'User' &&
-        //                         <Menu.Item icon={<AndroidOutlined />} key="appDetails">
-        //                         <NavLink to="/app1"> App1</NavLink>
-        //                     </Menu.Item>}
-        //
-        //                     {user.role === 'User' &&
-        //                     <Menu.Item icon={<AndroidOutlined />} key="app2">
-        //                         <NavLink to="/app2"> App 2</NavLink>
-        //                     </Menu.Item>}
-        //                     {user.role === 'User' &&<Menu.Item icon={<AndroidOutlined />} key="app3">
-        //                         <NavLink to="/app2"> App 3</NavLink>
-        //                     </Menu.Item>}
-        //                     <Menu.SubMenu icon={<SettingOutlined />} title="Setting">
-        //                     <Menu.Item  key="profile" >
-        //                         <NavLink to="/setting/profile">Profile</NavLink>
-        //                     </Menu.Item>
-        //                         <Menu.Item key="change-password" >
-        //                             <NavLink to="/setting/change-password">Change Password</NavLink>
-        //                         </Menu.Item>
-        //                     </Menu.SubMenu>
-        //                 </Menu>
-        //             </div>
-        //         )}
-        //
-        //         {/* Content */}
-        //         <div style={{ flex: 1, padding: '20px' }}>
-        //             <Routes>
-        //                 <Route path="*" element={<NotFound />} />
-        //
-        //                 <Route element={<PublicRoutes />}>
-        //                     <Route path="/login" element={<Login />} />
-        //                     <Route path="/register" element={<Register />} />
-        //                 </Route>
-        //                 <Route element={<PrivateRoutes />}>
-        //                     <Route index path="/dashboard" element={<Dashboard />} />
-        //                     <Route path="/setting/profile" element={<Profile />} />
-        //                     <Route path="/setting/change-password" element={<ChangePassword />} />
-        //                     <Route path="/app1" element={<App1 />} />
-        //                     <Route path="/app2" element={<App2 />} />
-        //                 </Route>
-        //             </Routes>
-        //         </div>
-        //
-        //         {/* Header */}
-        //         {token && (
-        //         <div style={{ padding: '20px' }}>
-        //             <div>
-        //                 Welcome {user.name}!
-        //                 <input type="button" onClick={handleLogout} value="Logout" />
-        //             </div>
-        //         </div>    )}
-        //
-        //     </div>
-        // </BrowserRouter>
+        windowWidth <= 768 ? <ErrorPage /> :
 
 
         <BrowserRouter>
             <Layout style={{ minHeight: '100vh' }}>
                 {/* Sidebar */}
                 {token && (
-                    <Sider theme="dark">
+                    <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                         <h2 style={{ color: 'white', paddingLeft:"37px" }}>{user.role}</h2>
                         <Menu mode="inline" theme="dark"  >
 

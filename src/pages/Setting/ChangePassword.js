@@ -1,20 +1,15 @@
-import { Form, Input, Card, Button, Select, Checkbox } from 'antd';
+import {Form, Input, Card, Button, Spin, message} from 'antd';
 import { useState, useEffect } from 'react';
-import axios from "axios";
-import {getToken, setUserSession} from "../../utils/common";
+import {getToken} from "../../utils/common";
 import {public_api} from "../../env";
 
-import {useNavigate} from "react-router-dom";
-const { Option } = Select;
-const CheckboxGroup = Checkbox.Group;
+
 
 function ChangePassword() {
     const [form] = Form.useForm();
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
-    const [roles, setRoles] = useState('User');
-    const [appList, setAppList] = useState([]);
-    const history = useNavigate();
+    const [messageApi,contextHolder] = message.useMessage();
     const initialValues = {
         name: '',
         email: '',
@@ -23,6 +18,12 @@ function ChangePassword() {
         role: 'User',
     };
     const token = getToken();
+    const success = (text) => {
+        messageApi.open({
+            type: 'success',
+            content: text,
+        });
+    };
     const validate = async (values) => {
         const errors = {};
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -41,17 +42,23 @@ function ChangePassword() {
     };
 
     const onFinish = async (values) => {
-        setFormErrors(await validate(values));
-        // setIsSubmit(true);
+        try {
+            setFormErrors(await validate(values));
+            // setIsSubmit(true);
 
-        const response = await fetch(`${public_api}/users/change-password`, {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer ' + token,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(values),
-        });
+            const response = await fetch(`${public_api}/users/change-password`, {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+            success('Update user successfully!')
+        } catch (error) {
+            console.log('error', error);
+        }
+
 
     };
 
@@ -61,11 +68,12 @@ function ChangePassword() {
         if (Object.keys(formErrors).length === 0 && isSubmit && form.isFieldsTouched(true)) {
             form.submit();
         }
-    }, [formErrors, isSubmit, form]);
+    }, [formErrors,  form]);
 
     return (
             <Card  title="Change Password" bordered={true}>
 
+                {contextHolder}
 
                 <Form
                     form={form}
@@ -119,7 +127,7 @@ function ChangePassword() {
                                 offset: 8,
                             },
                         }}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary"  htmlType="submit">
                                 Submit
                             </Button>
                         </Form.Item>
